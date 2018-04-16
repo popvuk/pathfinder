@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_toolbar1"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@drawable/bottom_bar1"
+    android:elevation="6dp"
+    android:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Location..."
+            android:textColorHint="#fff"
+            android:textSize="18sp"
+            android:textColor="#fff"
+            android:gravity="center_vertical|center"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/flag"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:src="@drawable/start_flag"
+            android:layout_margin="5dp"/>
+
+
+
+    </LinearLayout>
+</android.support.v7.widget.Toolbar>
