@@ -396,7 +396,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
-            lm.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, singleLocationListener = new LocationListener() {
+            lm.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
                     locationChanged(location);
