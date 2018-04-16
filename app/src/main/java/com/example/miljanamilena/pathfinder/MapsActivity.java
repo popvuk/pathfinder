@@ -216,7 +216,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 stopLocationUpdating();
                 go.setText(getString(R.string.reset));
                 timerStarted = false;
-                setMarker(curenttLatLang);
+                //setMarker(curenttLatLang);
                 int elapsedMillis = (int) (SystemClock.elapsedRealtime() - timer.getBase());
                 double seconds = elapsedMillis/1000;
                 double meters = Double.valueOf(distanceCovered.getText().toString());
