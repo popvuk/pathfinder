@@ -64,7 +64,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private android.location.LocationListener locationListener;
     private LinearLayout layoutInfo;
     private ImageView clear;
-    private LocationListener singleLocationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
