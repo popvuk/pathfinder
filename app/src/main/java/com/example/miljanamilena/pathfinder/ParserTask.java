@@ -1,5 +1,6 @@
 package com.example.miljanamilena.pathfinder;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -30,14 +31,16 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<Str
     private LinearLayout layoutInfo;
     private String curentDistance;
     private int request;
+    private Dialog dialog;
 
 
-    public ParserTask(GoogleMap map, TextView location, LinearLayout info)
+    public ParserTask(GoogleMap map, TextView location, LinearLayout info, Dialog dialog)
     {
         this.googleMap = map;
         this.locationDistance = location;
         this.layoutInfo = info;
         this.request = 1;
+        this.dialog = dialog;
     }
     public ParserTask(GoogleMap map, TextView distance)
     {
@@ -200,6 +203,7 @@ public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<Str
             {
                 locationDistance.setText(curentDistance);
                 layoutInfo.setVisibility(View.VISIBLE);
+                dialog.dismiss();
             }
             else if (request == 2)
             {

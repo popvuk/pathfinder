@@ -1,6 +1,7 @@
 package com.example.miljanamilena.pathfinder;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -64,11 +65,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private android.location.LocationListener locationListener;
     private LinearLayout layoutInfo;
     private ImageView clear;
+    private LoadingDialog loadingDialog;
+    private Dialog loading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        loadingDialog = new LoadingDialog(this);
+        loading = loadingDialog.createLoadingSpinner();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
@@ -110,6 +116,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
 
+                loading.show();
                 openAutocompleteActivity(1);
             }
         });
@@ -130,6 +137,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 start.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        loading.show();
                         openAutocompleteActivity(2);
                     }
                 });
@@ -138,6 +146,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 destination.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        loading.show();
                         openAutocompleteActivity(3);
                     }
                 });
@@ -238,6 +247,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         try
         {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(this);
+            //loading.dismiss();
             startActivityForResult(intent, request);
         }
         catch (GooglePlayServicesRepairableException e)
@@ -265,7 +275,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mMap.addMarker(currentLocationMarker);
                 setMarker(place.getLatLng());
                 String url = getUrl(curenttLatLang, place.getLatLng());
-                FetchUrl FetchUrl = new FetchUrl(mMap,locationDistance,layoutInfo);
+                FetchUrl FetchUrl = new FetchUrl(mMap,locationDistance,layoutInfo,loading);
                 FetchUrl.execute(url);
             }
             else if (requestCode == 2)
@@ -276,6 +286,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 destination.setEnabled(true);
                 mMap.addMarker(currentLocationMarker);
                 setMarker(place.getLatLng());
+                loading.dismiss();
             }
             else if (requestCode == 3)
             {
@@ -287,6 +298,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         {
             Status status = PlaceAutocomplete.getStatus(this, data);
             Log.i("POKUKA", status.getStatusMessage());
+        }
+        else if (resultCode == RESULT_CANCELED)
+        {
+            loading.dismiss();
         }
     }
 
@@ -348,13 +363,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void drawRoute()
     {
+        if(!loading.isShowing())
+            loading.show();
+
         LatLng origin = MarkerPoints.get(0);
         LatLng dest = MarkerPoints.get(1);
 
         // Getting URL to the Google Directions API
         String url = getUrl(origin, dest);
         Log.d("onMapClick", url);
-        FetchUrl FetchUrl = new FetchUrl(mMap, locationDistance, layoutInfo);
+        FetchUrl FetchUrl = new FetchUrl(mMap, locationDistance, layoutInfo, loading);
 
         // Start downloading json data from Google Directions API
         FetchUrl.execute(url);
@@ -396,6 +414,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
+            if(!lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                Toast.makeText(this, "Please enable access to your location", Toast.LENGTH_LONG).show();
+            }
+
             lm.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
@@ -403,13 +425,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
 
                 @Override
-                public void onStatusChanged(String s, int i, Bundle bundle) {}
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+
+                }
 
                 @Override
-                public void onProviderEnabled(String s) {}
+                public void onProviderEnabled(String s) {
+
+                }
 
                 @Override
-                public void onProviderDisabled(String s) {}
+                public void onProviderDisabled(String s) {
+
+                }
             }, null);
         }
 

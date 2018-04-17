@@ -1,5 +1,6 @@
 package com.example.miljanamilena.pathfinder;
 
+import android.app.Dialog;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.LinearLayout;
@@ -26,14 +27,16 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
     private TextView distanceCovered, locationDistance;
     private LinearLayout layoutInfo;
     private int request;
+    private Dialog dialog;
 
 
-    public FetchUrl (GoogleMap googleMap, TextView location, LinearLayout info)
+    public FetchUrl (GoogleMap googleMap, TextView location, LinearLayout info, Dialog loading)
     {
         this.map = googleMap;
         this.locationDistance = location;
         this.layoutInfo = info;
         this.request = 1;
+        this.dialog = loading;
     }
     public FetchUrl (GoogleMap googleMap, TextView distance)
     {
@@ -116,7 +119,7 @@ public class FetchUrl extends AsyncTask<String, Void, String> {
         switch (request)
         {
             case 1:
-                ParserTask parserTask1 = new ParserTask(map, locationDistance, layoutInfo);
+                ParserTask parserTask1 = new ParserTask(map, locationDistance, layoutInfo, dialog);
                 parserTask1.execute(result);
                 break;
 
